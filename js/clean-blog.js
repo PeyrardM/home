@@ -1,4 +1,8 @@
 // Floating label headings for the contact form
+$(document).ready(function(){
+  $('.header').load("header.html");
+});
+
 $(function() {
     $("body").on("input propertychange", ".floating-label-form-group", function(e) {
         $(this).toggleClass("floating-label-form-group-with-value", !!$(e.target).val());
