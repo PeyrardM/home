@@ -3,10 +3,10 @@
   <channel>
     <title>Home</title>
     <description></description>
-    <link>http://localhost:4000/</link>
-    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 24 Jan 2018 17:40:34 +0100</pubDate>
-    <lastBuildDate>Wed, 24 Jan 2018 17:40:34 +0100</lastBuildDate>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 24 Jan 2018 17:50:42 +0100</pubDate>
+    <lastBuildDate>Wed, 24 Jan 2018 17:50:42 +0100</lastBuildDate>
     <generator>Jekyll v3.5.0</generator>
     
       <item>
@@ -122,8 +122,8 @@ Nevertheless, These frameworks are relevant because they allow rigorous discussi
 &lt;li&gt;&lt;span id=&quot;Chaitin1989&quot;&gt;Chaitin, G. J. (1989). Algorithmic Information Theory. &lt;i&gt;Journal of Symbolic Logic&lt;/i&gt;, &lt;i&gt;54&lt;/i&gt;(2), 624–627.&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;
 </description>
         <pubDate>Sun, 14 Jan 2018 13:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2018/01/14/Kolmogorov/</link>
-        <guid isPermaLink="true">http://localhost:4000/2018/01/14/Kolmogorov/</guid>
+        <link>/2018/01/14/Kolmogorov/</link>
+        <guid isPermaLink="true">/2018/01/14/Kolmogorov/</guid>
         
         
       </item>
@@ -231,8 +231,8 @@ In the very beginning, we start with the uniform distribution \(U\) and gain som
 &lt;!-- &lt;p&gt;Finally, we see that the paradox is resolved by understanding what we mean when we use the word &lt;em&gt;information&lt;/em&gt;. Therefore, a text is more interesting if it is more complex because it exhibits more potential information. However, when measuring our uncertainty about how a system works, our information corresponds to how accurately we can predict its behaviour. In other words, information I(X) answers the question: what do we know about \(X\)? and entropy (or potential information) anwers the question: how much more is there to know about \(X\)? or how much more can I hope to learn by observing more of \(X\)?&lt;/p&gt; --&gt;
 </description>
         <pubDate>Wed, 20 Dec 2017 13:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2017/12/20/entropy/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/12/20/entropy/</guid>
+        <link>/2017/12/20/entropy/</link>
+        <guid isPermaLink="true">/2017/12/20/entropy/</guid>
         
         
       </item>
@@ -338,8 +338,8 @@ The search space is huge and it is common to use greedy optimization techniques,
 
 </description>
         <pubDate>Sat, 02 Dec 2017 13:00:00 +0100</pubDate>
-        <link>http://localhost:4000/2017/12/02/Eval_summ/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/12/02/Eval_summ/</guid>
+        <link>/2017/12/02/Eval_summ/</link>
+        <guid isPermaLink="true">/2017/12/02/Eval_summ/</guid>
         
         
       </item>
