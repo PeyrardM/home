@@ -1,0 +1,31 @@
+# Site settings
+title: "Home"
+subtitle: ""
+email: peyrard@aiphes.tu-darmstadt.de
+description: ""
+baseurl: ""
+url: ""
+github_username:  peyrardm
+
+gems: [jekyll-paginate-v2, jekyll-feed, jekyll-scholar]
+
+# Build settings
+markdown: kramdown
+highlighter: pygments
+permalink: pretty
+pagination:
+  enabled: true
+  per_page: 500
+  permalink: '/page:num/'
+  #title: ':title'
+  #limit: 0
+  sort_field: 'date'
+  sort_reverse: true
+exclude: ["node_modules"]
+
+analytics :
+  provider : google
+  google:
+    tracking_id : 'UA-36138203-3'
+  getclicky :
+    site_id

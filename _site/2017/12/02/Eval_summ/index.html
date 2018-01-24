@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+
+    <title>Alternative Evaluation of Summarizers - Home</title>
+
+    <link rel="canonical" href="http://localhost:4000/2017/12/02/Eval_summ/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/clean-blog.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36138203-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<body>
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Home</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+       <!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                
+                <li>
+                    
+                </li>
+                
+                <li>
+                    <a href="/index.html">Home</a>
+                </li>
+                
+            </ul>
+        </div> -->
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+
+
+    <!-- Post Header -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-36138203-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<header class="intro-header" style="background-image: url('/img/bg_home.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <h1>Alternative Evaluation of Summarizers</h1>
+                    
+                    <h2 class="subheading">How to evaluate some aspects of summarizers directly with human judgments</h2>
+                    
+                    <span class="meta">Posted on December 2, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+				<p>A task is well-defined when there exists a mathematical function measuring the degree of success of systems. An intuitive example is the <em>error function</em> which measures the average number of errors: 
+
+$$ \mathcal{E} = \frac{1}{|\mathcal{D}|} \sum\limits_{d \in \mathcal{D}} \epsilon(y_d, \widetilde{y}_d) $$
+
+Where \(y_d\) is the <em>gold</em> label and \(\widetilde{y}_d\) is the prediction. For a regression task, \(\epsilon\) might be the distance between \(y_d\) and \(\widetilde{y}_d\). For classification, \(\epsilon\) may be a binary function indicating whether the labels are different or not. Even if some error functions appear more natural than others, the choice of an error function is arbitrary. 
+</p>
+
+<p>A system converts the input \(I\) into <em>predicted labels</em> \(\widetilde{y}\) via a <em>prediction function</em> \(\sigma\): \(\widetilde{y} = \sigma(I)\). 
+Ideally, this function predicts the correct labels only from the input mimicking the humans who created the gold labels. Indeed, in many machine learning applications (e.g. NLP or computer vision), the goal is to model humans.
+<!-- , under the assumption that they have an implicit, deterministic and universal function mapping inputs to what we call gold labels. -->
+</p>
+
+<p>Inevitably, the choice of an <em>error function</em> determines the task because it defines good and bad. 
+<!-- Once a choice is made, it will be optimized either by supervised techniques or by repeated comparisons of unsupervised approaches.  -->
+Imagine \(\mathcal{E}\) happens to differ from our intuition. A good system according to our intuition may be discarded because judged weak by \(\mathcal{E}\). Hence, it is essential that \(\mathcal{E}\) encodes correctly our intuition about the task, meaning that \(\mathcal{E}\) is the useful surrogate for the human opinion.</p>
+
+<p>For regression and classification, we can be confident with the common error functions but, when it comes to summarization, we know that it is trickier.
+</p>
+
+<h2>Evaluation in Summarization</h2>
+<p>Summarization is no exception, as soon as we propose an automatic evaluation metric, it will also be optimized either by supervised techniques or by repeated comparison of unsupervised ones. However, in summarization, the <em>gold labels</em> provided by humans are not numbers or categories but summaries. </p>
+
+<p>One datapoint in summarization consists in a source \(T\) to be summarized and a set of <em>reference summaries</em>: \(R_{T}^{(i)}\). Usually several reference summaries are available. <!-- In classical datasets (DUC and TAC), we find 4 reference summaries per topic: \(|R_{T}^{(i)}| = 4\).  -->
+
+The global success (or error) function of a summarizer \(\sigma\) is given by:
+
+	$$ \mathcal{S} = \frac{1}{|\mathcal{D}|} \sum\limits_{T\in \mathcal{D}} \rho(\sigma(T), R_{T}^{(i)}) $$
+
+\(\rho\) measures the success of the summarizer \(\sigma\) for one individual datapoint: how good is the summary \(\sigma(T)\) compared to the <em>gold summaries</em>? </p>
+
+<p>Two different choices of \(\rho\) induce two different definitions of success and therefore two different summarization tasks. Instead of talking about a general summarization taks, we should talk about the specific \(\rho\)-summarization task.</p>
+
+<p>In the last decades, because of its simplicity and for lack of something better, the default choice for \(\rho\) has been ROUGE (R) <a href="#Lin2004">(2004)</a>, which implies that we focused on R-summarization: a good summary is one whose (stemmed) n-grams overlap a lot with the (stemmed) N-grams of human-written summaries.</p>
+
+<p>It may have advanced the field but does ROUGE encode accurately our intuition about summarization? Is it a good surrogate for human evaluation? 
+<!-- The evidence is showing that ROUGE has a limited correlation with human judgments.  -->
+R-summarization may not be the task we should to solve if we want to solve summarization as determined by human intuition.</p>
+
+<h2>An alternative view</h2>
+<p>One possible path of improvement is to craft better \(\rho\), which boils down to tackling textual similarity. Semantic textual similarity is largely unsolved and remains one of the main challenges of NLP. Hence, we may be stuck with poor approximations of human judgments for some time.</p>
+
+<p>In summarization, we may have another strategy to evaluate at least some aspects of summarizers using directly human judgments without solving textual similarity. We published this idea earlier this year <a href="#Peyrard2017">(2017)</a>.</p>
+
+<!-- <p>In extractive summarization, the input is seen as a set of sentences and a summary is a subset of these sentences. An extractive summarizer \(\sigma\) is a set function which maps an input to a summary.</p> -->
+
+<h3>\((\theta, O)\) Decomposition</h3>
+<p>Remember that a summarizer \(\sigma\) is a function mapping a text \(T\) to a shorter one \(\sigma(T) = S\). Intuitively, if the summarizer is not random, \(S\) was chosen because it has some properties. Explicitly or implicitly, \(\sigma\) prefers some summaries over others and selects a summary among its preferred ones. </p>
+
+<p>A natural formalization of summarization involves 2 independent components \(\theta\) and \(O\): <br />
+- \(\theta\) is the summary scoring function measuring the quality of a summary. It encodes the assumptions of \(\sigma\) about what is a good summary. <br />
+- \(O\) is an optimization algorithm which searches for a high-scoring summary: argmax \(\theta(S)\)
+</p>
+
+<h3>Summarizer evaluation</h3>
+<p>Based on this insights, we realize that we can evaluate directly the correlation between the scoring function \(\theta\) and human judgments. The final extracted summary \(\sigma(T)\) is not considered, but the implicit summary ordering function \(\theta\) is evaluated. It tests the causes which make \(\sigma\) selects the summaries it selects.</p>
+
+<p>It has the advantage of using directly the human judgments. It also incentivizes summarizers to have a causal approach to summarization matching the human process instead of discovering shortcut correlates of importance like frequency. Indeed, a summarizer might extract <em>good</em> summaries even with a poor \(\theta\) because of lucky correlations arising during optimization. </p>
+
+<p>For example, the ICSI system <a href="#Gillick2009">(2009)</a>, a strong unsupervised summarizer, seeks to extract the summary with the highest number of frequent bigrams. While the frequency of bigrams might be part of importance according to human, it is certainly very restrictive compared to the humans' notion of importance: a bag of the most frequent n-grams would be excellent according to ICSI but useless according to humans. However, the summarizer can extract helpful summaries because it is constrained to extract full sentences.</p>
+
+<h3>Discussion</h3>
+<p>As a limitation, note that it might be difficult to identify \(\theta\) for some hypothetical summarizers. However, the \((\theta, O)\) decomposition provides both a methodological and conceptual separation likely to be useful for developing new summarizers. </p>
+
+<p>\(O\) is mostly an engineering problem agnostic from the summarization task but discovering \(\theta\) is the core challenge of summarization. Ideally, \(\theta\) should encode all the relevant aspects of summarization such that, by maximizing it we obtain the best possible summary according to humans: 
+$$
+	\text{ argmax } \theta(S) \approx \text{ argmax } Human(S)
+$$</p>
+
+<p>To evaluate \(\theta\) in practice, one can use the human judgment datasets produced during DUC/TAC shared-tasks, where summaries from participating systems have been scored manually by humans. However, these datasets are still rather small and limited in scope. It would be worthwhile to collect more such datasets and think carefully about annotation guidelines.</p>
+
+<p>The human judgment datasets are also precisely the datasets used to compare traditional evaluation metrics. Finally, whether we'd like to pursue the path of improving \(\rho\), the path of directly evaluating \(\theta\) or both, it will be crucial to collect human judgment data.
+	<!-- Intuitivel, if we want a better understanding of the task, we need to collect more data about how humans do it. -->
+ </p>
+
+<p># References</p>
+<ol class="bibliography"><li><span id="Lin2004">Lin, C.-Y. (2004). ROUGE: A Package for Automatic Evaluation of Summaries. In <i>Text Summarization Branches Out: Proceedings of the ACL-04 Workshop</i> (pp. 74–81). Barcelona, Spain: Association for Computational Linguistics.</span></li>
+<li><span id="Peyrard2017">Peyrard, M., &amp; Eckle-Kohler, J. (2017). A Principled Framework for Evaluating Summarizers: Comparing Models of Summary Quality against Human Judgments. In <i>Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL 2017)</i> (Vol. Volume 2: Short Papers, pp. 26–31). Association for Computational Linguistics.</span></li>
+<li><span id="Gillick2009">Gillick, D., &amp; Favre, B. (2009). A Scalable Global Model for Summarization. In <i>Proceedings of the Workshop on Integer Linear Programming for Natural Language Processing</i> (pp. 10–18). Boulder, Colorado: Association for Computational Linguistics.</span></li></ol>
+
+<!-- <h2>Conclusion</h2>
+<p>The \((\theta, O)\) decomposition is a general framework to think about summarization in a principled way. It clarifies where and what are the assumptions about the quality of a summary. By decoupling \(\theta\) and \(O\) one can first evaluate \(\theta\) on its own and then evaluate the whole summarizer \((\theta, O)\) according to some \(\rho\)-summarization task. It is then natural to develop and study both components independently. By evaluating \(\theta\) alone one can measure the assumptions made by the summarizers directly against human judgments and therefore gain better insights than simply looking at the only single summary chosen by the optimization algorithm. </p> -->
+<!-- 
+<p>
+The search space is huge and it is common to use greedy optimization techniques, or constrain the objective function to have some nice mathematical properties. For example, if \(\theta\) is linear with respect to sentences, \(O\) can be an ILP, or if \(\theta\) is submodular one can use greedy algorithms with some guarantees. These are critical but practical considerations because \(\theta\) and \(O\) can conceptually be independent.
+</p>
+
+<h3>In practice</h3>
+<p>But, even though it is heavily criticized, ROUGE is still heavily used. Maybe it is not that bad. It became a standard probably because of its simplicity and decent correlation with human judgments. It is not a perfect surrogate for human opinion but optimizing it (aka choosing it as evaluation metric) may help advance the field of summarization? 
+</p>
+
+<p>It seems however quite clear that ROUGE is not enough. The community is looking for new, better evaluation metrics to replace the over-simplistic and naive ROUGE. 
+	ROUGE focuses on content because it is an important question that is the focus of summarization.
+	Ideally we'd like human and for content, one way is pyramid. People have defined automatic version of pyramid
+</p>
+
+ -->
+
+
+
+                <hr>
+
+                <ul class="pager">
+                     
+                    
+                    <li class="next">
+                        <a href="//2017/12/20/entropy/" data-toggle="tooltip" data-placement="top" title="Entropy and Information [IT.1]">Next Post &rarr;</a>
+                    </li>
+                     
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article> 
+
+
+
+
+    <!-- Footer -->
+<footer>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    <li>
+                        <a href="/feed.xml">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    <li>
+                        <a href="https://github.com/peyrardm">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                </ul>
+                <p class="copyright text-muted">Copyright &copy; Home 2018</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/clean-blog.min.js "></script>
+
+
+</body>
+
+</html>
