@@ -1,30 +1,348 @@
----
-layout: none
----
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>{{ site.title | xml_escape }}</title>
-    <description>{{ site.description | xml_escape }}</description>
-    <link>{{ site.url }}{{ site.baseurl }}/</link>
-    <atom:link href="{{ "/feed.xml" | prepend: site.baseurl | prepend: site.url }}" rel="self" type="application/rss+xml" />
-    <pubDate>{{ site.time | date_to_rfc822 }}</pubDate>
-    <lastBuildDate>{{ site.time | date_to_rfc822 }}</lastBuildDate>
-    <generator>Jekyll v{{ jekyll.version }}</generator>
-    {% for post in site.posts limit:10 %}
+    <title>Home</title>
+    <description></description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 24 Jan 2018 18:30:17 +0100</pubDate>
+    <lastBuildDate>Wed, 24 Jan 2018 18:30:17 +0100</lastBuildDate>
+    <generator>Jekyll v3.5.0</generator>
+    
       <item>
-        <title>{{ post.title | xml_escape }}</title>
-        <description>{{ post.content | xml_escape }}</description>
-        <pubDate>{{ post.date | date_to_rfc822 }}</pubDate>
-        <link>{{ post.url | prepend: site.baseurl | prepend: site.url }}</link>
-        <guid isPermaLink="true">{{ post.url | prepend: site.baseurl | prepend: site.url }}</guid>
-        {% for tag in post.tags %}
-        <category>{{ tag | xml_escape }}</category>
-        {% endfor %}
-        {% for cat in post.categories %}
-        <category>{{ cat | xml_escape }}</category>
-        {% endfor %}
+        <title>Entropy and Complexity [IT.2]</title>
+        <description>&lt;p&gt;In a prior article, we introduced Shannon's entropy and the resulting interpretations of information.  Now, we describe an alternative view on information. While Shannon &lt;a href=&quot;#Shannon_1963&quot;&gt;(1948)&lt;/a&gt; approached it from a probabilistic perspective, Kolmogorov &lt;a href=&quot;#Kolmogorov65&quot;&gt;(1965)&lt;/a&gt;, Solomonoff &lt;a href=&quot;#SOLOMONOFF1964&quot;&gt;(1964)&lt;/a&gt;, and Chaitin &lt;a href=&quot;#Chaitin1989&quot;&gt;(1989)&lt;/a&gt; related information to computation in a profound way using Turing machines. They formed the field of &lt;em&gt;Algorithmic Information Theory&lt;/em&gt;, which proposes the &lt;em&gt;Kolmogorov Complexity&lt;/em&gt; as the main quantity.&lt;/p&gt;
+
+&lt;!-- [https://homepages.cwi.nl/~paulv/papers/info.pdf]. --&gt;
+
+&lt;h2&gt;Limitation of Shannon's Information&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;Consider the question of estimating the amount of information in a given text. &lt;/p&gt;
+
+&lt;p&gt;Information theory assumes that objects are outcomes of a random source. In this case, information is quantified by entropy. In fact, Shannon's notion of information ignores properties of the objects and only the characteristics of the random source determines the information theoretic properties.&lt;/p&gt;
+
+&lt;p&gt;Hence, before measuring the entropy of a specific text, we must define a general probabilistic model: &lt;br /&gt;
+- We may model text generation as a stochastic process with each word being drawn from some distribution. However, a realistic model should account for syntax, semantic, the author's mind and any other contextual variables that influenced the writing process. &lt;br /&gt;
+- Otherwise, we can view the whole text itself as an element drawn from the set of all possible texts. This also appears difficult since we must specify a meaningful probability distribution on this huge set. 
+&lt;/p&gt;
+
+&lt;p&gt;Alternatively, we can search for a measure of information that does not rely on (unrealistic) probabilistic assumptions. This measure would be independent of the knowledge of an observer and the information content of an object \(x\) would be an intrinsic property of \(x\).&lt;/p&gt;
+
+&lt;p&gt;The &lt;b&gt;Kolmogorov complexity&lt;/b&gt; is a measure satisfying these requirements. It views complexity as a fundamental property of an object based on regularity, symmetry, and compressibility. It is tied to computation because the complexity of an object is the length of the shortest programme producing it. Kolmogorov complexity does not need the assumption about the message coming from a random source, it measures the minimum number of bits from which a specific message can be effectively reconstructed.&lt;/p&gt;
+
+&lt;!-- &lt;p&gt;Shannon's entropy measures the minimum expected number of bits to transmit a message from a random source with known characteristics. Kolomogorov complexity does not need the assumption about the message coming from a random source, it measures the minimum number of bits from which a specific message can be effectively reconstructed. &lt;/p&gt; --&gt;
+
+&lt;!-- &lt;p&gt;By analogy with the previous post, imagine a system \(X\) that can be in \(N\) different states. Our knowledge about the behavior of \(X\) is encoded into a probability distribution. Shannon's entropy measures our uncertainty about \(X\) based on the assumption that \(X\) is a random source with some distribution. Kolmogorov complexity aims at measuring the intrinsic information of specific states \(w_i\). It is indepedent of the existence or behavior of \(X\) and therefore indepedent from our knowledge about \(X\). Instead it is a property of \(x_i\) alone&lt;/p&gt; --&gt;
+
+&lt;!-- &lt;p&gt;Kolmogorov complexity is not dependent on the knowledge of the observer and is a fundamental property of object but this renders its computation and estimation rather difficult in practice. In this post, we'll discuss Kolmogorov complexity and how it connects to Shannon's entropy. We'll also see the connexion with Gödel's incompleteness theorem.&lt;/p&gt; --&gt;
+
+&lt;h2&gt;Kolmogorov Complexity&lt;/h2&gt;
+&lt;h3&gt;Turing Maching&lt;/h3&gt;
+&lt;p&gt;A Turing machine (TM) consists of 3 tapes: the program tape, the work tape and the output tape.  For simplicity and without loss of generality, we can focus on binary alphabets \(\{0,1\}\). 
+The program tape is &quot;read-only&quot; and can just move to the right.
+The output tape is &quot;write-only&quot; and also move only to the right.
+The working tape is 'read and write' and can move in both directions.
+A Turing machine has a finite number of internal states and its behavior is determined by a function, which maps the current state and the content of the currently read square on the working tape to a new state and an action.&lt;/p&gt;
+
+&lt;p&gt;A finite binary string \(p\) written on the program tape is a &lt;b&gt;program&lt;/b&gt; if and only if a Turing machine M reads all bits of \(p\) and halts. This implies that no program can be the prefix of another one. &lt;/p&gt;
+
+&lt;p&gt;It is well-known that there exists a universal Turing Machine \(U\): For any Turing Machine \(C\) there exists a constant prefix \(\mu_C\) such that:
+$$
+\forall p \in P, C(p) = U(\mu_Cp).
+$$
+\(P\) is the set of programs and the prefix \(\mu_C\) is the compiler that compiles programs written for \(C\) into equivalent programs for \(U\).&lt;/p&gt;
+
+&lt;p&gt;Since Turing's work, we acknowledge that any computable mathematical object can be described by a binary string. Consequently, an object \(x\) can be identified by a binary string. Intuitively, the complexity of \(x\) (or amount of information) is related to the structure of the binary string representation. We say that \(x\) is complex if it can't be compressed much.&lt;/p&gt;
+
+&lt;h3&gt;Complexity&lt;/h3&gt;
+&lt;p&gt;We call a description of \(x\) a program \(s_x\) that generates \(x\): \(U(s_x) = x\).
+An object \(x\) might have several descriptions but each description specifies only one object.&lt;/p&gt;
+
+&lt;p&gt;The Kolmogorov complexity of an object \(x\) is defined as the length of its shortest description:
+$$
+K(x) = \min\limits_{p} \{l(p) | U(p) = x\}
+$$ 
+Intuitively, an object is simple if it can be described briefly and &lt;em&gt;complex&lt;/em&gt; if it requires a long description. The intuition is similar in communication theory, where descriptions are replaced by messages. &lt;/p&gt;
+
+&lt;h3&gt;Conditional Complexity&lt;/h3&gt;
+&lt;p&gt;Suppose we have a program \(p\) running on the universal Turing machine \(U\). Until now, we considered programs without input data, they simply run and output \(x\). &lt;/p&gt;
+
+&lt;p&gt;Now, we note \(&amp;lt;p,y&amp;gt;\) the program taking as input the string \(y\). We call  &lt;b&gt;conditional complexity&lt;/b&gt; of \(x|y\) the size of the smallest program generating \(x\) given that \(y\) is used as input. 
+$$
+    K(x|y) = \min\limits_{p} \{l(p) | U(&amp;lt;p,y&amp;gt;) = x\}
+$$
+Therefore, we have \(K(x) = K(x | \epsilon)\) where \(\epsilon\) is the empty input. Since \(y\) can bring some information about \(x\) it might be possible to devise a shorter program to generate \(x\). In the limit, \(y=x\) and there can be an extremely simple program that just copies its entry \(y\) to the output. Conversly, if \(y\) does not contain any information about \(x\), then \(K(x|y) = K(x)\) and this is the equivalent of independence in probabilistic terms.&lt;/p&gt;
+
+&lt;h3&gt;Consequences&lt;/h3&gt;
+&lt;p&gt;When \(K(x) \approx l(x)\),  \(x\) is incompressible, it has no structure and therefore random. Finding a shorter description is mapping from strings to strings and there are many more long strings than short ones. Most strings cannot possibly have a short description and therefore most strings are random.&lt;/p&gt;
+
+&lt;p&gt;It is important because it reveals that &lt;em&gt;simplicity&lt;/em&gt; and structure are special. Most computable objects are random. Generalization and learning can be thought of instances of simplification or finding structure and regularity: we can only generalize if there is some underlying structure. Most objects are not learnable which is surprising because we see structure everywhere in the world.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, \(K(x)\) is not a recursive function: we generally cannot compute it from the complexity of substrings of \(x\). \(K\) is not computable in general, but there exists useful extension of \(K\) like Levin Complexity (To be discussed in later posts).&lt;/p&gt;
+
+&lt;!-- Suppose we could find \(z\) t --&gt;
+
+&lt;h2&gt;Complexity and Entropy&lt;/h2&gt;
+&lt;p&gt;Suppose we have a random variable \(X\) taking the state \(x_i\) with a probability distribution \(P(X=x_i) = p_i\). 
+
+In Shannon's view, the entropy of \(X\) is: \(H(X) = -\sum\limits_{x_i} p_i \cdot \log(p_i)\), where \((-\log(p_i))\) is the surprise of observing the state \(x_i\).
+From Kolmogorov's perspective, \(K(x_i)\) is fixed for each \(x_i\) and independent of \(P\).&lt;/p&gt;
+
+&lt;p&gt;The surprise of observing \(x_i\) is the Shannon equivalent of the intrinsic information of Kolmogorov. Therefore, we may wonder whether \(\sum\limits_{x} p_i \cdot K(x_i)\) ressembles \(H(X)\). Indeed, \(K(x_i)\) is the shortest description of \(x_i\), meaning we could encode \(x_i\) optimally. With Shannon, we have optimality on average. In fact, there exists a theorem saying that:
+$$
+	0 \leq (\sum\limits_{x} p_i \cdot K(x_i) - H(X)) \leq K(P) + O(1)
+$$ 
+This means that for simple distributions on states the expected Kolmogorov complexity is close to Shannon's entropy. These two quantities might be wide apart for complex distribution however. &lt;/p&gt;
+
+&lt;h2&gt;Complexity and Information&lt;/h2&gt;
+
+&lt;p&gt;Shannon's entropy can be understood as potential information, a measure of how much more we can learn about the system in order to predict perfectly its behavior. In Kolmogorov theory, low complexity is revealed by regularity and symmetry. Complexity originates in symmetry breaking.&lt;/p&gt;
+
+&lt;p&gt;When we compared a text \(Y\) made of one repeated word and \(Z\) outputting proper English, we noticed that \(Z\) is more interesting because it has more potential information. However, we would not find a string of purely random characters particularly interesting. It may be because random means high complexity, lack of symmetry or absence of simple rules behind the object. We cannot expect to discover elegant simple laws behind a random text. &lt;/p&gt;
+
+&lt;p&gt;Maybe, something is subjectively interesting if it has high potential information but low complexity. Indeed, if the object of study has high potential (based on our current knowledge), we could still learn a lot about it. However, if it has a high complexity, the object is basically random and we can never find simple laws to explain it. Finally, low complexity means &lt;em&gt;learnable&lt;/em&gt; and high entropy means &lt;em&gt;yet to be learned&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The scientific questions we find fascinating like the brain, consciousness, intelligence or the laws of the universe are exciting because we expect them to be learnable (low objective complexity: not random and governed by simple symmetric regular principles) while yet to be learned (high subjective entropy: currently high uncertainty about them). &lt;/p&gt;
+
+&lt;p&gt;Shannon's entropy is about measuring information in term of what we know encoded in conditional probability distributions. It supports a Bayesian view of the world and knowledge acquisition. Kolmogorov's complexity is independent of presupposition and captures an intrinsic property of an object by quantifying the amount of structure and regularity. Surprisingly, the two different perspectives turn out to be connected via the notion of compressibility: bringing together the notions of information via knowledge and information via structure/pattern. &lt;/p&gt;
+
+&lt;p&gt;This connection is rather intuitive as we already expected that a system with regular patterns can be compressed into a generalizable model. Both perspectives account for this view of information by compression and generalizability. &lt;/p&gt;
+
+&lt;!-- &lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt; Shannon's entropy is about measuring information in term of what we know about a system encoded in conditional probability distributions. It supports a bayesian view of the world and knowledge acquisition.
+Kolmogorov's complexity is independent of presupposition and it is an intrinsic property of object quantifying the amount of structure and regularity. Surprinsigly, The two different perspectives turn out to be connected and close to each other &lt;em&gt;in the limit&lt;/em&gt; bringing together the notions of information via knowledge and information via structure/pattern. This connection is rather intuitive as we already expected that a system with regular patterns can be compressed into a generalizable model. Both theories account for this view of information by compression. 
+ However, they both come with difficutlties: Shannon's view requires assumptions about the systems, its states and its probability distribution while Kolmogorov's complexity is neither computable nor easily estimable.
+Nevertheless, These frameworks are relevant because they allow rigorous discussion of knowledge acquisition, learning, pattern and structure emergence. All of which are profound and challenging questions of modern science.&lt;/p&gt; --&gt;
+
+&lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
+&lt;ol class=&quot;bibliography&quot;&gt;&lt;li&gt;&lt;span id=&quot;Shannon_1963&quot;&gt;Shannon, C. E., &amp;amp; Weaver, W. (1948). &lt;i&gt;A Mathematical Theory of Communication&lt;/i&gt;. &lt;i&gt;Bell System Technical Journal&lt;/i&gt; (Vol. 27, pp. 623–656). Blackwell Publishing Ltd.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;Kolmogorov65&quot;&gt;Kolmogorov, A. N. (1965). Three approaches to the quantitative definition of information. &lt;i&gt;Problems of Information Transmission&lt;/i&gt;, &lt;i&gt;1&lt;/i&gt;(1), 1–7.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;SOLOMONOFF1964&quot;&gt;Solomonoff, R. J. (1964). A formal theory of inductive inference. Part I. &lt;i&gt;Information and Control&lt;/i&gt;, &lt;i&gt;7&lt;/i&gt;, 1–22.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;Chaitin1989&quot;&gt;Chaitin, G. J. (1989). Algorithmic Information Theory. &lt;i&gt;Journal of Symbolic Logic&lt;/i&gt;, &lt;i&gt;54&lt;/i&gt;(2), 624–627.&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;
+</description>
+        <pubDate>Sun, 14 Jan 2018 13:00:00 +0100</pubDate>
+        <link>/2018/01/14/Kolmogorov/</link>
+        <guid isPermaLink="true">/2018/01/14/Kolmogorov/</guid>
+        
+        
       </item>
-    {% endfor %}
+    
+      <item>
+        <title>Entropy and Information [IT.1]</title>
+        <description>&lt;p&gt;Information theory is the field that quantifies rigorously the notion of information, which is highly relevant to understand patterns emerging from natural and mathematical phenomena. Hence, it has found wide-ranging applications in physics &lt;a href=&quot;#Jaynes_1957&quot;&gt;(1957)&lt;/a&gt;, economics &lt;a href=&quot;#EcoIT&quot;&gt;(1993)&lt;/a&gt;, biology &lt;a href=&quot;#Adami_2012&quot;&gt;(2012)&lt;/a&gt;,  machine learning &lt;a href=&quot;#tishby99&quot;&gt;(1999)&lt;/a&gt; and even consciousness &lt;a href=&quot;#IIT&quot;&gt;(2016)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Information theory primarily intends to measure information and track its variations via a mathematical object called Entropy. Entropy was introduced by Shannon &lt;a href=&quot;#Shannon_1963&quot;&gt;(1948)&lt;/a&gt;	 as a measure of uncertainty and information, but the term was borrowed from thermodynamics. The resulting notions from communication theory and physics can be united but render different views on the notion of information. As a result, understanding how information and entropy relate to each other can be unclear. &lt;/p&gt;
+
+&lt;h2&gt;Entropy measures uncertainty&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;Imagine a system which can be in one state among \(N\) possible states. We don't know precisely its future evolution, but our assumptions about the next state are described by a random variable \(X\) following a probability distribution: \(P(X=x_i) = p_i\). Shannon's &lt;em&gt;entropy&lt;/em&gt; \(H\) is a measure of our uncertainty about the next state:
+$$
+	H(X) = - \sum\limits_{x_i \in \Omega} p_i \cdot \log(p_i)
+$$
+&lt;/p&gt;
+
+&lt;p&gt; \(H(X)\) is maximal when the probability distribution is uniform ( i.e. all states are equally likely). Also, it is \(0\) when there exists one state \(x_i\) such that \(p_i = 1\), when we know the next state of \(X\) with no ambiguity. In between, \(H(X)\) quantifies this uncertainty.
+&lt;/p&gt;
+
+&lt;p&gt;Observe that \(-\log(p_i)\) is interpreted as the surprisal of observing the state \(x_i\) given our assumptions. Indeed, if \(p_i\) is small, \(-\log(p_i)\) is large and we would be surprised to observe \(x_i\).  Therefore, entropy is the average surprise. &lt;/p&gt;
+
+&lt;p&gt;If we can query an oracle about the next state of \(X\), but only with &quot;Yes/No&quot; questions. With an optimal strategy, what is the average number of queries we have to make before knowing the answer unambiguously? It is the entropy (up to some rounding because entropy is continuous): the minimum amount of &quot;Yes/No&quot; questions (or bits) necessary to describe this outcome. For this reason, we say that entropy is the average amount of information we need to transmit in order to convey the outcome. Intuitively, we don't need much information to communicate a probable outcome, while a surprising result requires more information.&lt;/p&gt;
+
+&lt;p&gt;Entropy is a measure of uncertainty, average surprisal and, according to Shannon, a measure of information.&lt;/p&gt;
+&lt;!-- &lt;p&gt;Note: When we say we do not know anything about \(X\) we still somehow know what are the possible state. Doesn't this count as information about \(X\)? It is important to note that the question we are asking is not about \(X\) itself but about the behaviour of \(X\). The question is about which state will it take not about what \(X\) is. The uncertainty we are trying to quantify is about \(X\)'s behaviour, but we could also ask a different question: how many states exists for \(X\)? This would be subject to its own probability distribution over \(\mathbb{N}\) and subject to its own uncertainty measure. &lt;/p&gt; --&gt;
+
+&lt;!-- &lt;p&gt;Entropy, uncertainty and ultimately information depend on the observer for two reasons: (1) Which question do we ask? The uncertainty can only be measured as the uncertainty over the answer to some specific question. (2) What we already know. There is a probability distribution over the possible answer to our question to measure the uncertainty. As we said before, the probability distribution is uniform when we know nothing about the answer but as soon as we have some &lt;em&gt;information&lt;/em&gt; the distribution changes. &lt;/p&gt; --&gt;
+
+&lt;h2&gt;Information&lt;/h2&gt;
+&lt;hr /&gt;
+
+&lt;p&gt;With the same system \(X\), we can have a different intuitive view on information based on the following considerations:&lt;/p&gt;
+
+&lt;p&gt;(1) If we possess no &lt;b&gt;information&lt;/b&gt; about the behavior of the system, then the answer to the question &quot;what is the next state?&quot; is a uniform distribution over states. No information corresponds to maximum uncertainty (entropy).&lt;/p&gt;
+
+&lt;p&gt;(2) Should we gain information about the system, we would recognize some states as more likely than others. Mathematically, we would have a new distribution over states different from the uniform. In fact, any non-uniform probability distribution contains &lt;b&gt;information&lt;/b&gt; because it says which outcomes are more likely. &lt;b&gt;Information&lt;/b&gt; is ultimately a measure of our capacity of making predictions (better than random) and non-uniform means better predictions than pure random guess.&lt;/p&gt;
+
+&lt;!-- &lt;p&gt;(3) When we know everything there is to know about the system (we gained all information possible), then we can predict exactly the state in which the system will be. We have no more uncertainty. The probability distribution is \(1\) for the one state which will definitely be the outcome and \(0\) for all the others. This corresponds to no uncertainty and an entropy of \(0\).&lt;/p&gt; --&gt;
+
+&lt;p&gt;Now we are thinking about gain or loss of information, which are quantified by the fluctuations of entropy (uncertainty). In absence of information, we assume a uniform distribution. Gaining information moves the distribution away from the uniform, causing a decrease in entropy \(H\). Consequently, the quantity of &lt;b&gt;information&lt;/b&gt; gained is precisely this change in entropy:
+$$
+	I(X) = H(U) - H(X)
+$$
+If we didn't know anything, we would have to make \(H(U)\) queries, but only \(H(X)\) suffice: we gained the equivalent of \(H(U) - H(X)\) bits of information by knowing the distribution of \(X\). Thus, \(I(X)\) measures the amount of information we possess, and \(H(X)\) the amount of information we still need to obtain before knowing \(X\) exactly.
+&lt;/p&gt;
+
+&lt;p&gt;In this Bayesian viewpoint, we necessarily begin with a uniform distribution, which changes with the acquisition of knowledge. 
+In fact, every non-uniform probability distribution is conditional because whenever the probability distribution deviates from the uniform, it contains information which comes from some knowledge source. One natural interpretation is to view probability distribution as the answer to the question &quot;what will be the outcome?&quot; given the knowledge we currently have. \(I\) quantifies this knowledge in bits.&lt;/p&gt;
+
+&lt;!-- &lt;h3&gt;Mutual Information&lt;/h3&gt;
+
+&lt;p&gt;First, observe that every non-uniform probability distribution is conditional. Indeed, whenever the probability distribution deviates from the uniform distribution, it is because we have some knowledge and we are conditioning on this new knowledge. The probability distribution is the answer to the question &quot;what will be the outcome?&quot; given the knowledge we have.&lt;/p&gt;
+
+&lt;p&gt;Now, suppose we have two random variables (systems) \(X\) and \(Y\) each following a probability distribution. Now, what happens if we gain knowledge about \(Y\), do we also gain information about \(X\)? If \(X|Y\) is the same as \(X\) then observing \(Y\) gave us no information about \(X\) and we say that \(X\) and \(Y\) are independent.&lt;/p&gt;
+
+&lt;p&gt;If we gained information about \(X\) by observing \(Y\), the uncertainty (entropy) of \(X\) should decrease (move away from the uniform distribution): \(H(X|Y) \le H(X)\). If observing \(Y\) reduced the uncertainty we have about \(X\) and we can quantify this reduction: 
+	$$
+		I(X|Y) = H(X) - H(X|Y)
+	$$
+There are two non-trivial facts to observe here: (1) \(I(X|Y) = I(Y|X)\) therefore we note it \(I(X,Y)\). It means that the amount of information we gain about \(X\) by observing \(Y\) is always the same as the amount of information we gain about \(Y\) by observing \(X\). (2) \(I(X,Y) \geq 0\), meaning that \(H(X|Y) \leq H(X)\) (with equality when \(X\) and \(Y\) are independent). It has the intuitive explanation that observing \(Y\) (learning something) can not increase the uncertainty about \(X\), at worst it doesn't tell us anything new about \(X\).
+&lt;/p&gt;
+
+&lt;p&gt;Now, if \(X\) is non-uniform it is conditional; there exists a source of knowledge \(K\) such that \(X = U|K\). We can observe that what we defined to be \(I(X)\) takes the shape of a mutual information between the uniform distribution and this \(K\):
+$$
+	I(X) = H(U) - H(X) = H(U) - H(U|K) =  I(K, U) 
+$$
+In the very beginning, we start with the uniform distribution \(U\) and gain some information. This information induces a new probability distribution \(X\) (=\(U|K\)). The quantity of information we gained is measured by \(I(X) = I(K, U)\). Later, we may observe \(Y\) which updates the probability distribution to a new one \(X|Y\) with lower uncertainty, and so on until we know everything or cannot gain more information.
+&lt;/p&gt; --&gt;
+
+&lt;h2&gt;Potential Information&lt;/h2&gt;
+&lt;p&gt;According the previous insights, it appears that &lt;em&gt;entropy&lt;/em&gt; and &lt;em&gt;information&lt;/em&gt; move in reverse direction. Gaining information reduces entropy (uncertainty) and high entropy indicates a lack of information: information is the difference between the maximum entropy and the actual entropy. Yet, we also remember that Shannon originally introduced entropy directly as a measure of information. There seems to be a contradiction here.
+	&lt;!-- In particular, &lt;em&gt;self-information&lt;/em&gt; or &lt;em&gt;information content&lt;/em&gt; induced by one state is given by \(\log(\frac{1}{p_i})\). These two notion of &lt;em&gt;information&lt;/em&gt; seem contradictory. --&gt;
+&lt;/p&gt;
+
+&lt;p&gt;In fact, the new notion information is more akin to physical views of Von Neumann, where &lt;em&gt;entropy&lt;/em&gt; may be viewed as a physical measure of the lack of physical information about the details of a system. These discrepancies arise because the two fields are interested in two different questions. &lt;/p&gt;
+
+&lt;p&gt;The physical view intends to measure our ability to predict the evolution of the system (done by \(I(X)\)). Communication theory desires to measure how much it should transmit to describe the next state (done by \(H(X)\)). The two perceptions are basically &lt;em&gt;equivalent&lt;/em&gt; because they are tightly connected via the constant maximum entropy \(H(U)\): \(I(X) = H(U) - H(X)\). &lt;/p&gt;
+
+&lt;h3&gt;Example&lt;/h3&gt;
+&lt;p&gt;To further this point, we can study an example. Let \(Y\) and \(Z\) be two random variables generating two texts: \(Y\) generates a boring text with one letter repeated \(n\) times while \(Z\) is proper English. &lt;/p&gt;
+
+&lt;p&gt;Intuitively, we'd say that \(Y\) does not contain much information. Our intuition follows Shannon's notion: the text contains little information because we can communicate its content easily. The other notion says: we can predict it perfectly, therefore, we possess all the information.&lt;/p&gt;
+
+&lt;p&gt;According to Shannon, \(Z\) contains a lot of information because we need many &quot;Yes/No&quot; questions to transmit its content. The physics view states: there must be information missing before we can predict \(Z\) perfectly. Intuitively, the more surprising a text is the more information we could learn about the process that generated it.&lt;/p&gt;
+
+&lt;!-- &lt;p&gt;Remark that this assumes a deterministic world: we can learn about \(X\) until there is no randomness and perfect predictions. Imagine there exists an object with true randomness. We can obtain all the information but its entropy never decreases below a minimal \(H \ge 0\). Then this minimal entropy is the measure of its randomness, of its intrinsic incompressibility. Incompressibility because it is the amount of information inside this object which cannot come from elsewhere (other source of knowledge). (The question of whether true randomness exists is out of scope, but in practice we observe randomness.)&lt;/p&gt; --&gt;
+
+&lt;h3&gt;Consequences&lt;/h3&gt;
+&lt;p&gt;The safe view is to interpret entropy as a measure of uncertainty. Entropy is also a measure of information but whether entropy and information evolve in the same direction or not depends on what we question we ask: what do we already know? or what remains to be known?&lt;/p&gt;
+
+&lt;p&gt;In general, we can assume that entropy represents the &lt;b&gt;potential information&lt;/b&gt;: the amount of information we have to gain before knowing the outcome exactly. Information in Shannon's view is this potential information.&lt;/p&gt;
+
+&lt;p&gt;Note: Identifying the &quot;entropy as a lack of information&quot; intuition to the physics idea of information is a bit hasty. Here, it seems that entropy and information depend on an observer and its assumptions. However, in physics, entropy is defined more subtly: it is independent of any observer since it captures a statistical property of a system.&lt;/p&gt;
+
+&lt;h1 id=&quot;references&quot;&gt;References&lt;/h1&gt;
+&lt;ol class=&quot;bibliography&quot;&gt;&lt;li&gt;&lt;span id=&quot;Jaynes_1957&quot;&gt;Jaynes, E. T. (1957). Information Theory and Statistical Mechanics. &lt;i&gt;Physical Review&lt;/i&gt;, &lt;i&gt;106&lt;/i&gt;(4), 620–630. https://doi.org/10.1103/PhysRev.106.620&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;EcoIT&quot;&gt;Maasoumi, E. (1993). A compendium to information theory in economics and econometrics. &lt;i&gt;Econometric Reviews&lt;/i&gt;, &lt;i&gt;12&lt;/i&gt;(2), 137–181. https://doi.org/10.1080/07474939308800260&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;Adami_2012&quot;&gt;Adami, C. (2012). The use of information theory in evolutionary biology. &lt;i&gt;Annals of the New York Academy of Sciences&lt;/i&gt;, &lt;i&gt;1256&lt;/i&gt;(1), 49–65. https://doi.org/10.1111/j.1749-6632.2011.06422.x&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;tishby99&quot;&gt;Tishby, N., Pereira, F. C., &amp;amp; Bialek, W. (1999). The information bottleneck method. In &lt;i&gt;Proceedings of the 37-th Annual Allerton Conference on Communication, Control and Computing&lt;/i&gt; (pp. 368–377). Retrieved from /brokenurl#citeseer.nj.nec.com/tishby99information.html&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;IIT&quot;&gt;Tononi, G., Boly, M., Massimini, M., &amp;amp; Koch, C. (2016). Integrated information theory: from consciousness to its physical substrate. &lt;i&gt;Nature Reviews Neuroscience&lt;/i&gt;, &lt;i&gt;17&lt;/i&gt;(2). https://doi.org/10.1038/nrn.2016.44&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;Shannon_1963&quot;&gt;Shannon, C. E., &amp;amp; Weaver, W. (1948). &lt;i&gt;A Mathematical Theory of Communication&lt;/i&gt;. &lt;i&gt;Bell System Technical Journal&lt;/i&gt; (Vol. 27, pp. 623–656). Blackwell Publishing Ltd.&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;
+&lt;!-- &lt;p&gt;Finally, we see that the paradox is resolved by understanding what we mean when we use the word &lt;em&gt;information&lt;/em&gt;. Therefore, a text is more interesting if it is more complex because it exhibits more potential information. However, when measuring our uncertainty about how a system works, our information corresponds to how accurately we can predict its behaviour. In other words, information I(X) answers the question: what do we know about \(X\)? and entropy (or potential information) anwers the question: how much more is there to know about \(X\)? or how much more can I hope to learn by observing more of \(X\)?&lt;/p&gt; --&gt;
+</description>
+        <pubDate>Wed, 20 Dec 2017 13:00:00 +0100</pubDate>
+        <link>/2017/12/20/entropy/</link>
+        <guid isPermaLink="true">/2017/12/20/entropy/</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Alternative Evaluation of Summarizers</title>
+        <description>&lt;p&gt;A task is well-defined when there exists a mathematical function measuring the degree of success of systems. An intuitive example is the &lt;em&gt;error function&lt;/em&gt; which measures the average number of errors: 
+
+$$ \mathcal{E} = \frac{1}{|\mathcal{D}|} \sum\limits_{d \in \mathcal{D}} \epsilon(y_d, \widetilde{y}_d) $$
+
+Where \(y_d\) is the &lt;em&gt;gold&lt;/em&gt; label and \(\widetilde{y}_d\) is the prediction. For a regression task, \(\epsilon\) might be the distance between \(y_d\) and \(\widetilde{y}_d\). For classification, \(\epsilon\) may be a binary function indicating whether the labels are different or not. Even if some error functions appear more natural than others, the choice of an error function is arbitrary. 
+&lt;/p&gt;
+
+&lt;p&gt;A system converts the input \(I\) into &lt;em&gt;predicted labels&lt;/em&gt; \(\widetilde{y}\) via a &lt;em&gt;prediction function&lt;/em&gt; \(\sigma\): \(\widetilde{y} = \sigma(I)\). 
+Ideally, this function predicts the correct labels only from the input mimicking the humans who created the gold labels. Indeed, in many machine learning applications (e.g. NLP or computer vision), the goal is to model humans.
+&lt;!-- , under the assumption that they have an implicit, deterministic and universal function mapping inputs to what we call gold labels. --&gt;
+&lt;/p&gt;
+
+&lt;p&gt;Inevitably, the choice of an &lt;em&gt;error function&lt;/em&gt; determines the task because it defines good and bad. 
+&lt;!-- Once a choice is made, it will be optimized either by supervised techniques or by repeated comparisons of unsupervised approaches.  --&gt;
+Imagine \(\mathcal{E}\) happens to differ from our intuition. A good system according to our intuition may be discarded because judged weak by \(\mathcal{E}\). Hence, it is essential that \(\mathcal{E}\) encodes correctly our intuition about the task, meaning that \(\mathcal{E}\) is the useful surrogate for the human opinion.&lt;/p&gt;
+
+&lt;p&gt;For regression and classification, we can be confident with the common error functions but, when it comes to summarization, we know that it is trickier.
+&lt;/p&gt;
+
+&lt;h2&gt;Evaluation in Summarization&lt;/h2&gt;
+&lt;p&gt;Summarization is no exception, as soon as we propose an automatic evaluation metric, it will also be optimized either by supervised techniques or by repeated comparison of unsupervised ones. However, in summarization, the &lt;em&gt;gold labels&lt;/em&gt; provided by humans are not numbers or categories but summaries. &lt;/p&gt;
+
+&lt;p&gt;One datapoint in summarization consists in a source \(T\) to be summarized and a set of &lt;em&gt;reference summaries&lt;/em&gt;: \(R_{T}^{(i)}\). Usually several reference summaries are available. &lt;!-- In classical datasets (DUC and TAC), we find 4 reference summaries per topic: \(|R_{T}^{(i)}| = 4\).  --&gt;
+
+The global success (or error) function of a summarizer \(\sigma\) is given by:
+
+	$$ \mathcal{S} = \frac{1}{|\mathcal{D}|} \sum\limits_{T\in \mathcal{D}} \rho(\sigma(T), R_{T}^{(i)}) $$
+
+\(\rho\) measures the success of the summarizer \(\sigma\) for one individual datapoint: how good is the summary \(\sigma(T)\) compared to the &lt;em&gt;gold summaries&lt;/em&gt;? &lt;/p&gt;
+
+&lt;p&gt;Two different choices of \(\rho\) induce two different definitions of success and therefore two different summarization tasks. Instead of talking about a general summarization taks, we should talk about the specific \(\rho\)-summarization task.&lt;/p&gt;
+
+&lt;p&gt;In the last decades, because of its simplicity and for lack of something better, the default choice for \(\rho\) has been ROUGE (R) &lt;a href=&quot;#Lin2004&quot;&gt;(2004)&lt;/a&gt;, which implies that we focused on R-summarization: a good summary is one whose (stemmed) n-grams overlap a lot with the (stemmed) N-grams of human-written summaries.&lt;/p&gt;
+
+&lt;p&gt;It may have advanced the field but does ROUGE encode accurately our intuition about summarization? Is it a good surrogate for human evaluation? 
+&lt;!-- The evidence is showing that ROUGE has a limited correlation with human judgments.  --&gt;
+R-summarization may not be the task we should to solve if we want to solve summarization as determined by human intuition.&lt;/p&gt;
+
+&lt;h2&gt;An alternative view&lt;/h2&gt;
+&lt;p&gt;One possible path of improvement is to craft better \(\rho\), which boils down to tackling textual similarity. Semantic textual similarity is largely unsolved and remains one of the main challenges of NLP. Hence, we may be stuck with poor approximations of human judgments for some time.&lt;/p&gt;
+
+&lt;p&gt;In summarization, we may have another strategy to evaluate at least some aspects of summarizers using directly human judgments without solving textual similarity. We published this idea earlier this year &lt;a href=&quot;#Peyrard2017&quot;&gt;(2017)&lt;/a&gt;.&lt;/p&gt;
+
+&lt;!-- &lt;p&gt;In extractive summarization, the input is seen as a set of sentences and a summary is a subset of these sentences. An extractive summarizer \(\sigma\) is a set function which maps an input to a summary.&lt;/p&gt; --&gt;
+
+&lt;h3&gt;\((\theta, O)\) Decomposition&lt;/h3&gt;
+&lt;p&gt;Remember that a summarizer \(\sigma\) is a function mapping a text \(T\) to a shorter one \(\sigma(T) = S\). Intuitively, if the summarizer is not random, \(S\) was chosen because it has some properties. Explicitly or implicitly, \(\sigma\) prefers some summaries over others and selects a summary among its preferred ones. &lt;/p&gt;
+
+&lt;p&gt;A natural formalization of summarization involves 2 independent components \(\theta\) and \(O\): &lt;br /&gt;
+- \(\theta\) is the summary scoring function measuring the quality of a summary. It encodes the assumptions of \(\sigma\) about what is a good summary. &lt;br /&gt;
+- \(O\) is an optimization algorithm which searches for a high-scoring summary: argmax \(\theta(S)\)
+&lt;/p&gt;
+
+&lt;h3&gt;Summarizer evaluation&lt;/h3&gt;
+&lt;p&gt;Based on this insights, we realize that we can evaluate directly the correlation between the scoring function \(\theta\) and human judgments. The final extracted summary \(\sigma(T)\) is not considered, but the implicit summary ordering function \(\theta\) is evaluated. It tests the causes which make \(\sigma\) selects the summaries it selects.&lt;/p&gt;
+
+&lt;p&gt;It has the advantage of using directly the human judgments. It also incentivizes summarizers to have a causal approach to summarization matching the human process instead of discovering shortcut correlates of importance like frequency. Indeed, a summarizer might extract &lt;em&gt;good&lt;/em&gt; summaries even with a poor \(\theta\) because of lucky correlations arising during optimization. &lt;/p&gt;
+
+&lt;p&gt;For example, the ICSI system &lt;a href=&quot;#Gillick2009&quot;&gt;(2009)&lt;/a&gt;, a strong unsupervised summarizer, seeks to extract the summary with the highest number of frequent bigrams. While the frequency of bigrams might be part of importance according to human, it is certainly very restrictive compared to the humans' notion of importance: a bag of the most frequent n-grams would be excellent according to ICSI but useless according to humans. However, the summarizer can extract helpful summaries because it is constrained to extract full sentences.&lt;/p&gt;
+
+&lt;h3&gt;Discussion&lt;/h3&gt;
+&lt;p&gt;As a limitation, note that it might be difficult to identify \(\theta\) for some hypothetical summarizers. However, the \((\theta, O)\) decomposition provides both a methodological and conceptual separation likely to be useful for developing new summarizers. &lt;/p&gt;
+
+&lt;p&gt;\(O\) is mostly an engineering problem agnostic from the summarization task but discovering \(\theta\) is the core challenge of summarization. Ideally, \(\theta\) should encode all the relevant aspects of summarization such that, by maximizing it we obtain the best possible summary according to humans: 
+$$
+	\text{ argmax } \theta(S) \approx \text{ argmax } Human(S)
+$$&lt;/p&gt;
+
+&lt;p&gt;To evaluate \(\theta\) in practice, one can use the human judgment datasets produced during DUC/TAC shared-tasks, where summaries from participating systems have been scored manually by humans. However, these datasets are still rather small and limited in scope. It would be worthwhile to collect more such datasets and think carefully about annotation guidelines.&lt;/p&gt;
+
+&lt;p&gt;The human judgment datasets are also precisely the datasets used to compare traditional evaluation metrics. Finally, whether we'd like to pursue the path of improving \(\rho\), the path of directly evaluating \(\theta\) or both, it will be crucial to collect human judgment data.
+	&lt;!-- Intuitivel, if we want a better understanding of the task, we need to collect more data about how humans do it. --&gt;
+ &lt;/p&gt;
+
+&lt;p&gt;# References&lt;/p&gt;
+&lt;ol class=&quot;bibliography&quot;&gt;&lt;li&gt;&lt;span id=&quot;Lin2004&quot;&gt;Lin, C.-Y. (2004). ROUGE: A Package for Automatic Evaluation of Summaries. In &lt;i&gt;Text Summarization Branches Out: Proceedings of the ACL-04 Workshop&lt;/i&gt; (pp. 74–81). Barcelona, Spain: Association for Computational Linguistics.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;Peyrard2017&quot;&gt;Peyrard, M., &amp;amp; Eckle-Kohler, J. (2017). A Principled Framework for Evaluating Summarizers: Comparing Models of Summary Quality against Human Judgments. In &lt;i&gt;Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL 2017)&lt;/i&gt; (Vol. Volume 2: Short Papers, pp. 26–31). Association for Computational Linguistics.&lt;/span&gt;&lt;/li&gt;
+&lt;li&gt;&lt;span id=&quot;Gillick2009&quot;&gt;Gillick, D., &amp;amp; Favre, B. (2009). A Scalable Global Model for Summarization. In &lt;i&gt;Proceedings of the Workshop on Integer Linear Programming for Natural Language Processing&lt;/i&gt; (pp. 10–18). Boulder, Colorado: Association for Computational Linguistics.&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;
+
+&lt;!-- &lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The \((\theta, O)\) decomposition is a general framework to think about summarization in a principled way. It clarifies where and what are the assumptions about the quality of a summary. By decoupling \(\theta\) and \(O\) one can first evaluate \(\theta\) on its own and then evaluate the whole summarizer \((\theta, O)\) according to some \(\rho\)-summarization task. It is then natural to develop and study both components independently. By evaluating \(\theta\) alone one can measure the assumptions made by the summarizers directly against human judgments and therefore gain better insights than simply looking at the only single summary chosen by the optimization algorithm. &lt;/p&gt; --&gt;
+&lt;!-- 
+&lt;p&gt;
+The search space is huge and it is common to use greedy optimization techniques, or constrain the objective function to have some nice mathematical properties. For example, if \(\theta\) is linear with respect to sentences, \(O\) can be an ILP, or if \(\theta\) is submodular one can use greedy algorithms with some guarantees. These are critical but practical considerations because \(\theta\) and \(O\) can conceptually be independent.
+&lt;/p&gt;
+
+&lt;h3&gt;In practice&lt;/h3&gt;
+&lt;p&gt;But, even though it is heavily criticized, ROUGE is still heavily used. Maybe it is not that bad. It became a standard probably because of its simplicity and decent correlation with human judgments. It is not a perfect surrogate for human opinion but optimizing it (aka choosing it as evaluation metric) may help advance the field of summarization? 
+&lt;/p&gt;
+
+&lt;p&gt;It seems however quite clear that ROUGE is not enough. The community is looking for new, better evaluation metrics to replace the over-simplistic and naive ROUGE. 
+	ROUGE focuses on content because it is an important question that is the focus of summarization.
+	Ideally we'd like human and for content, one way is pyramid. People have defined automatic version of pyramid
+&lt;/p&gt;
+
+ --&gt;
+
+</description>
+        <pubDate>Sat, 02 Dec 2017 13:00:00 +0100</pubDate>
+        <link>/2017/12/02/Eval_summ/</link>
+        <guid isPermaLink="true">/2017/12/02/Eval_summ/</guid>
+        
+        
+      </item>
+    
   </channel>
 </rss>
