@@ -1,140 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+---
+layout:     post
+title:      "Entropy and Complexity [IT.2]"
+subtitle:   "Introduction to algorithmic information theory"
+date:       2018-01-14 12:00:00
+author:     "peyrardm"
+header-img: "img/bg_home.jpg"
+---
 
-<head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-
-    <title>Entropy and Complexity [IT.2] - Home</title>
-
-    <link rel="canonical" href="/2018/01/14/Kolmogorov/">
-
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/clean-blog.css">
-
-    <!-- Pygments Github CSS -->
-    <link rel="stylesheet" href="/css/syntax.css">
-
-    <!-- Custom Fonts -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-36138203-3', 'auto');
-  ga('send', 'pageview');
-
-</script>
-<body>
-
-    <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
-    <div class="container-fluid">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header page-scroll">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Home</a>
-        </div>
-
-        <!-- Collect the nav links, forms, and other content for toggling -->
-       <!--  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                
-                <li>
-                    
-                </li>
-                
-                <li>
-                    <a href="/index.html">Home</a>
-                </li>
-                
-            </ul>
-        </div> -->
-        <!-- /.navbar-collapse -->
-    </div>
-    <!-- /.container -->
-</nav>
-
-
-    <!-- Post Header -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-36138203-3', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
-<script type="text/javascript" async
-    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML">
-</script>
-
-<header class="intro-header" style="background-image: url('/img/bg_home.jpg')">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <h1>Entropy and Complexity [IT.2]</h1>
-                    
-                    <h2 class="subheading">Introduction to algorithmic information theory</h2>
-                    
-                    <span class="meta">Posted on January 14, 2018</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-
-<!-- Post Content -->
-
-
-
-<article>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-
-				<p>In a prior article, we introduced Shannon's entropy and the resulting interpretations of information.  Now, we describe an alternative view on information. While Shannon <a href="#Shannon_1963">(1948)</a> approached it from a probabilistic perspective, Kolmogorov <a href="#Kolmogorov65">(1965)</a>, Solomonoff <a href="#SOLOMONOFF1964">(1964)</a>, and Chaitin <a href="#Chaitin1989">(1989)</a> related information to computation in a profound way using Turing machines. They formed the field of <em>Algorithmic Information Theory</em>, which proposes the <em>Kolmogorov Complexity</em> as the main quantity.</p>
+<p>In a prior article, we introduced Shannon's entropy and the resulting interpretations of information.  Now, we describe an alternative view on information. While Shannon {% cite Shannon_1963 -A %} approached it from a probabilistic perspective, Kolmogorov {% cite Kolmogorov65 -A %}, Solomonoff {% cite SOLOMONOFF1964 -A %}, and Chaitin {% cite Chaitin1989 -A %} related information to computation in a profound way using Turing machines. They formed the field of <em>Algorithmic Information Theory</em>, which proposes the <em>Kolmogorov Complexity</em> as the main quantity.</p>
 
 <!-- [https://homepages.cwi.nl/~paulv/papers/info.pdf]. -->
 
 <h2>Limitation of Shannon's Information</h2>
-<hr />
-
+<hr>
 <p>Consider the question of estimating the amount of information in a given text. </p>
 
 <p>Information theory assumes that objects are outcomes of a random source. In this case, information is quantified by entropy. In fact, Shannon's notion of information ignores properties of the objects and only the characteristics of the random source determines the information theoretic properties.</p>
 
-<p>Hence, before measuring the entropy of a specific text, we must define a general probabilistic model: <br />
-- We may model text generation as a stochastic process with each word being drawn from some distribution. However, a realistic model should account for syntax, semantic, the author's mind and any other contextual variables that influenced the writing process. <br />
+<p>Hence, before measuring the entropy of a specific text, we must define a general probabilistic model: <br>
+- We may model text generation as a stochastic process with each word being drawn from some distribution. However, a realistic model should account for syntax, semantic, the author's mind and any other contextual variables that influenced the writing process. <br>
 - Otherwise, we can view the whole text itself as an element drawn from the set of all possible texts. This also appears difficult since we must specify a meaningful probability distribution on this huge set. 
 </p>
 
@@ -168,7 +52,7 @@ $$
 
 <h3>Complexity</h3>
 <p>We call a description of \(x\) a program \(s_x\) that generates \(x\): \(U(s_x) = x\).
-An object \(x\) might have several descriptions but each description specifies only one object.</p>
+An object \(x\) might have several descriptions but each description specifies only one object.</p> 
 
 <p>The Kolmogorov complexity of an object \(x\) is defined as the length of its shortest description:
 $$
@@ -179,9 +63,9 @@ Intuitively, an object is simple if it can be described briefly and <em>complex<
 <h3>Conditional Complexity</h3>
 <p>Suppose we have a program \(p\) running on the universal Turing machine \(U\). Until now, we considered programs without input data, they simply run and output \(x\). </p>
 
-<p>Now, we note \(&lt;p,y&gt;\) the program taking as input the string \(y\). We call  <b>conditional complexity</b> of \(x|y\) the size of the smallest program generating \(x\) given that \(y\) is used as input. 
+<p>Now, we note \(<p,y>\) the program taking as input the string \(y\). We call  <b>conditional complexity</b> of \(x|y\) the size of the smallest program generating \(x\) given that \(y\) is used as input. 
 $$
-    K(x|y) = \min\limits_{p} \{l(p) | U(&lt;p,y&gt;) = x\}
+    K(x|y) = \min\limits_{p} \{l(p) | U(<p,y>) = x\}
 $$
 Therefore, we have \(K(x) = K(x | \epsilon)\) where \(\epsilon\) is the empty input. Since \(y\) can bring some information about \(x\) it might be possible to devise a shorter program to generate \(x\). In the limit, \(y=x\) and there can be an extremely simple program that just copies its entry \(y\) to the output. Conversly, if \(y\) does not contain any information about \(x\), then \(K(x|y) = K(x)\) and this is the equivalent of independence in probabilistic terms.</p>
 
@@ -199,6 +83,7 @@ Therefore, we have \(K(x) = K(x | \epsilon)\) where \(\epsilon\) is the empty in
 
 In Shannon's view, the entropy of \(X\) is: \(H(X) = -\sum\limits_{x_i} p_i \cdot \log(p_i)\), where \((-\log(p_i))\) is the surprise of observing the state \(x_i\).
 From Kolmogorov's perspective, \(K(x_i)\) is fixed for each \(x_i\) and independent of \(P\).</p>
+
 
 <p>The surprise of observing \(x_i\) is the Shannon equivalent of the intrinsic information of Kolmogorov. Therefore, we may wonder whether \(\sum\limits_{x} p_i \cdot K(x_i)\) ressembles \(H(X)\). Indeed, \(K(x_i)\) is the shortest description of \(x_i\), meaning we could encode \(x_i\) optimally. With Shannon, we have optimality on average. In fact, there exists a theorem saying that:
 $$
@@ -220,82 +105,12 @@ This means that for simple distributions on states the expected Kolmogorov compl
 
 <p>This connection is rather intuitive as we already expected that a system with regular patterns can be compressed into a generalizable model. Both perspectives account for this view of information by compression and generalizability. </p>
 
+
 <!-- <h2>Conclusion</h2>
 <p> Shannon's entropy is about measuring information in term of what we know about a system encoded in conditional probability distributions. It supports a bayesian view of the world and knowledge acquisition.
 Kolmogorov's complexity is independent of presupposition and it is an intrinsic property of object quantifying the amount of structure and regularity. Surprinsigly, The two different perspectives turn out to be connected and close to each other <em>in the limit</em> bringing together the notions of information via knowledge and information via structure/pattern. This connection is rather intuitive as we already expected that a system with regular patterns can be compressed into a generalizable model. Both theories account for this view of information by compression. 
  However, they both come with difficutlties: Shannon's view requires assumptions about the systems, its states and its probability distribution while Kolmogorov's complexity is neither computable nor easily estimable.
 Nevertheless, These frameworks are relevant because they allow rigorous discussion of knowledge acquisition, learning, pattern and structure emergence. All of which are profound and challenging questions of modern science.</p> -->
 
-<h1 id="references">References</h1>
-<ol class="bibliography"><li><span id="Shannon_1963">Shannon, C. E., &amp; Weaver, W. (1948). <i>A Mathematical Theory of Communication</i>. <i>Bell System Technical Journal</i> (Vol. 27, pp. 623–656). Blackwell Publishing Ltd.</span></li>
-<li><span id="Kolmogorov65">Kolmogorov, A. N. (1965). Three approaches to the quantitative definition of information. <i>Problems of Information Transmission</i>, <i>1</i>(1), 1–7.</span></li>
-<li><span id="SOLOMONOFF1964">Solomonoff, R. J. (1964). A formal theory of inductive inference. Part I. <i>Information and Control</i>, <i>7</i>, 1–22.</span></li>
-<li><span id="Chaitin1989">Chaitin, G. J. (1989). Algorithmic Information Theory. <i>Journal of Symbolic Logic</i>, <i>54</i>(2), 624–627.</span></li></ol>
-
-
-                <hr>
-
-                <ul class="pager">
-                    
-                    <li class="previous">
-                        <a href="//2017/12/20/entropy/" data-toggle="tooltip" data-placement="top" title="Entropy and Information [IT.1]">&larr; Previous Post</a> 
-                    </li>
-                     
-                     
-                </ul>
-
-            </div>
-        </div>
-    </div>
-</article> 
-
-
-
-
-    <!-- Footer -->
-<footer>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <ul class="list-inline text-center">
-                    <li>
-                        <a href="/feed.xml">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-rss fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                    
-                    
-                    <li>
-                        <a href="https://github.com/peyrardm">
-                            <span class="fa-stack fa-lg">
-                                <i class="fa fa-circle fa-stack-2x"></i>
-                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                            </span>
-                        </a>
-                    </li>
-                    
-                </ul>
-                <p class="copyright text-muted">Copyright &copy; Home 2018</p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- jQuery -->
-<script src="/js/jquery.min.js "></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="/js/bootstrap.min.js "></script>
-
-<!-- Custom Theme JavaScript -->
-<script src="/js/clean-blog.min.js "></script>
-
-
-</body>
-
-</html>
+# References
+{% bibliography --cited %}
